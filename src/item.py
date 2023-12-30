@@ -1,3 +1,6 @@
+import csv
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -14,11 +17,42 @@ class Item:
         :param quantity: Количество товара в магазине.
         :param id: Способ создания уникального id для подсчета экземпляров класса
         """
-        self.name = name
+        self.__name = name
         self.price = price
         self.quantity = quantity
         self.id = len(Item.all) + 1
         Item.all.append(self)
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, value):
+        if len(value) > 10:
+            self.__name = value[:10]
+            print(f"Длина наименования товара превышает 10 символов. Обрезано до: {self.__name}")
+        self.__name = value
+
+    @classmethod
+    def instantiate_from_csv(cls, filename='C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/'
+                                           'src/items.csv') -> None:
+        Item.all.clear()
+        with (open(filename, newline='', encoding='windows-1251') as file):
+            reader = csv.DictReader(file, delimiter=",")
+            for row in reader:
+                name = row['name']
+                price = int(row['price'])
+                quantity = int(row['quantity'])
+                cls(name, price, quantity)
+        return cls.all
+
+    @staticmethod
+    def string_to_number(s):
+        try:
+            return int(float(s))
+        except ValueError:
+            return None
 
     def calculate_total_price(self) -> float:
         """
@@ -38,21 +72,27 @@ class Item:
 
 
 # Пример использования класса
-if __name__ == "__main__":
-    item1 = Item("Ноутбук", 10000.0, 20)
-    item2 = Item("Смартфон", 5990.0, 35)
-    item3 = Item("Наушники", 1890, 15)
+# if __name__ == "__main__":
+    # item1 = Item("Ноутбук", 10000.0, 20)
+    # item2 = Item("Смартфон", 5990.0, 35)
+    # item3 = Item("Наушники", 1890, 15)
 
-    print(f"В нашем магазине электроники в наличии {len(Item.all)} товаров!\n")
+    # print(f"В нашем магазине электроники в наличии {len(Item.all)} товаров!\n")
 
-    print(f"Товар {item1.name} с полной стоимостью = {item1.calculate_total_price()}")
-    print(f"Товар {item2.name} с полной стоимостью = {item2.calculate_total_price()}")
-    print(f"Товар {item3.name} с полной стоимостью = {item3.calculate_total_price()}\n")
+    # print(f"Товар {item1.name} с полной стоимостью = {item1.calculate_total_price()}")
+    # print(f"Товар {item2.name} с полной стоимостью = {item2.calculate_total_price()}")
+    # print(f"Товар {item3.name} с полной стоимостью = {item3.calculate_total_price()}\n")
 
-    item1.apply_discount()
-    item2.apply_discount()
-    item3.apply_discount()
+    # item1.apply_discount()
+    # item2.apply_discount()
+    # item3.apply_discount()
 
-    print(f"Товар {item1.name} с учетом скидки = {item1.price}")
-    print(f"Товар {item2.name} с учетом скидки = {item2.price}")
-    print(f"Товар {item3.name} с учетом скидки = {item3.price}")
+    # print(f"Товар {item1.name} с учетом скидки = {item1.price}")
+    # print(f"Товар {item2.name} с учетом скидки = {item2.price}")
+    # print(f"Товар {item3.name} с учетом скидки = {item3.price}")
+
+if __name__ == '__main__':
+    Item.instantiate_from_csv()
+
+    for item in Item.all:
+        print(item.name, item.price, item.quantity)

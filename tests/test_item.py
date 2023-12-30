@@ -1,5 +1,4 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
-
 from src.item import Item
 
 
@@ -32,3 +31,26 @@ def test_apply_discount():
     assert item1.price == 8000.0
     assert item2.price == 4792.0
     assert item3.price == 1512.0
+
+
+# def test_item_name():
+# item = Item('Телефон', 10000, 5)
+# item.name = 'Смартфон'
+# assert item.name == 'Смартфон'
+
+# with pytest.raises(ValueError) as excinfo:
+# item.name = 'СуперСмартфон'
+
+# assert str(excinfo.value) == "Длина наименования товара превышает 10 символов. Обрезано до: СуперСмарт"
+
+
+def test_instantiate_from_csv():
+    items = Item.instantiate_from_csv('C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/'
+                                      'src/items.csv')
+    assert len(items) == 5
+
+
+def test_string_to_number():
+    assert Item.string_to_number('5') == 5
+    assert Item.string_to_number('5.0') == 5
+    assert Item.string_to_number('5.5') == 5
