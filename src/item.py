@@ -17,7 +17,7 @@ class Item:
         :param quantity: Количество товара в магазине.
         :param id: Способ создания уникального id для подсчета экземпляров класса
         """
-        self.__name = name
+        self.name = name
         self.price = price
         self.quantity = quantity
         self.id = len(Item.all) + 1
@@ -31,7 +31,7 @@ class Item:
     def name(self, value):
         if len(value) > 10:
             self.__name = value[:10]
-            print(f"Длина наименования товара превышает 10 символов. Обрезано до: {self.__name}")
+            print("Длина наименования товара превышает 10 символов.")
         self.__name = value
 
     @classmethod

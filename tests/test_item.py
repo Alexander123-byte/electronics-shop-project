@@ -44,9 +44,21 @@ def test_apply_discount():
 # assert str(excinfo.value) == "Длина наименования товара превышает 10 символов. Обрезано до: СуперСмарт"
 
 
+def test_item_name():
+    item = Item('Телефон', 10000, 5)
+    assert item.name == 'Телефон'
+
+    # Установка короткого имени
+    item.name = 'Смартфон'
+    assert item.name == 'Смартфон'
+
+    # Установка длинного имени
+    item.name = 'СуперСмартфон'
+    assert item.name.startswith('СуперСмарт')
+
+
 def test_instantiate_from_csv():
-    items = Item.instantiate_from_csv('C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/'
-                                      'src/items.csv')
+    items = Item.instantiate_from_csv('C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/src/items.csv')
     assert len(items) == 5
 
 
