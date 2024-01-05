@@ -23,6 +23,12 @@ class Item:
         self.id = len(Item.all) + 1
         Item.all.append(self)
 
+    def __repr__(self):
+        return f'Item({self.name!r}, {self.price}, {self.quantity})'
+
+    def __str__(self):
+        return f'{self.name}'
+
     @property
     def name(self):
         return self.__name
@@ -71,28 +77,5 @@ class Item:
         self.price *= self.pay_rate
 
 
-# Пример использования класса
-# if __name__ == "__main__":
-    # item1 = Item("Ноутбук", 10000.0, 20)
-    # item2 = Item("Смартфон", 5990.0, 35)
-    # item3 = Item("Наушники", 1890, 15)
-
-    # print(f"В нашем магазине электроники в наличии {len(Item.all)} товаров!\n")
-
-    # print(f"Товар {item1.name} с полной стоимостью = {item1.calculate_total_price()}")
-    # print(f"Товар {item2.name} с полной стоимостью = {item2.calculate_total_price()}")
-    # print(f"Товар {item3.name} с полной стоимостью = {item3.calculate_total_price()}\n")
-
-    # item1.apply_discount()
-    # item2.apply_discount()
-    # item3.apply_discount()
-
-    # print(f"Товар {item1.name} с учетом скидки = {item1.price}")
-    # print(f"Товар {item2.name} с учетом скидки = {item2.price}")
-    # print(f"Товар {item3.name} с учетом скидки = {item3.price}")
-
 if __name__ == '__main__':
-    Item.instantiate_from_csv()
-
-    for item in Item.all:
-        print(item.name, item.price, item.quantity)
+    item1 = Item("Смартфон", 10000, 20)

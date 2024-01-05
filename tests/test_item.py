@@ -33,17 +33,6 @@ def test_apply_discount():
     assert item3.price == 1512.0
 
 
-# def test_item_name():
-# item = Item('Телефон', 10000, 5)
-# item.name = 'Смартфон'
-# assert item.name == 'Смартфон'
-
-# with pytest.raises(ValueError) as excinfo:
-# item.name = 'СуперСмартфон'
-
-# assert str(excinfo.value) == "Длина наименования товара превышает 10 символов. Обрезано до: СуперСмарт"
-
-
 def test_item_name():
     item = Item('Телефон', 10000, 5)
     assert item.name == 'Телефон'
@@ -66,3 +55,13 @@ def test_string_to_number():
     assert Item.string_to_number('5') == 5
     assert Item.string_to_number('5.0') == 5
     assert Item.string_to_number('5.5') == 5
+
+
+def test_item_repr():
+    item = Item('Телефон', 10000, 5)
+    assert repr(item) == "Item('Телефон', 10000, 5)"
+
+
+def test_item_str():
+    item = Item('Телефон', 10000, 5)
+    assert str(item) == "Телефон"
