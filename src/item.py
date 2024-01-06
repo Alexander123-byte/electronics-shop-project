@@ -37,7 +37,6 @@ class Item:
     def name(self, value):
         if len(value) > 10:
             self.__name = value[:10]
-            print("Длина наименования товара превышает 10 символов.")
         self.__name = value
 
     @classmethod
@@ -75,6 +74,18 @@ class Item:
         # В данном случае скидка 20%
         Item.pay_rate = 0.8
         self.price *= self.pay_rate
+
+    def __add__(self, other):
+        """
+        Магический метод, который позволяет сложить экземпляр класса
+        с произвольным типом данных
+        :param other: Принимает остаток товара в магазине
+        :return: Вывод общего количества товара
+        """
+        if isinstance(other, Item):
+            return int(self.quantity) + int(other.quantity)
+        else:
+            raise TypeError("Нельзя сложить классы 'Item' и чем-то другим.")
 
 
 if __name__ == '__main__':
