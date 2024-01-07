@@ -83,9 +83,9 @@ class Item:
         :return: Вывод общего количества товара
         """
         if isinstance(other, Item):
-            return int(self.quantity) + int(other.quantity)
+            return self.quantity + other.quantity
         else:
-            raise TypeError("Нельзя сложить классы 'Item' и чем-то другим.")
+            raise TypeError("Unsupported operand type. You can only add Item instances.")
 
 
 if __name__ == '__main__':

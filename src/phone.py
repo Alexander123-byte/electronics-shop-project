@@ -16,7 +16,20 @@ class Phone(Item):
         :param other: принимает остаток товара Phone
         :return: Вывод общего количества товара
         """
-        if isinstance(other, Phone):
-            return int(self.quantity) + int(other.quantity)
+        if isinstance(other, Item) or isinstance(other, Phone):
+            total_quantity = self.quantity + other.quantity
+            total_number_of_sim = self.number_of_sim
+            if isinstance(other, Phone):
+                total_number_of_sim += other.number_of_sim
+
+            if total_number_of_sim <= 0 or not isinstance(total_number_of_sim, int):
+                raise ValueError("Количество физических SIM-карт должно быть целым числом больше нуля.")
+
+            return total_quantity
         else:
-            raise TypeError("Нельзя сложить классы 'Phone' и чем-то другим.")
+            raise TypeError("Unsupported operand type. You can only add Phone or Item instances.")
+
+        # if isinstance(other, Item) or isinstance(other, Phone):
+            # return self.quantity + other.quantity
+        # else:
+            # raise TypeError("Unsupported operand type. You can only add Phone or Item instances.")
