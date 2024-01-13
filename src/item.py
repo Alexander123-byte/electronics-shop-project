@@ -1,6 +1,12 @@
 import csv
 
 
+class InstantiateCSVError(Exception):
+    """
+    Исключение, выбрасываемое при ошибке в процессе инстанциации из CSV файла.
+    """
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -40,17 +46,39 @@ class Item:
         self.__name = value
 
     @classmethod
-    def instantiate_from_csv(cls, filename='C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/'
-                                           'src/items.csv') -> None:
-        Item.all.clear()
-        with (open(filename, newline='', encoding='windows-1251') as file):
-            reader = csv.DictReader(file, delimiter=",")
-            for row in reader:
-                name = row['name']
-                price = int(row['price'])
-                quantity = int(row['quantity'])
-                cls(name, price, quantity)
-        return cls.all
+    def instantiate_from_csv(cls,
+                             filename='C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/src/items.csv') -> None:
+        """
+        Создает экземпляры класса Item на основе данных, считанных из CSV-файла.
+
+        :param filename: Путь к CSV-файлу с данными. По умолчанию, используется файл 'items.csv'.
+        :type filename: str
+        :raises FileNotFoundError: Если файл не найден.
+        :raises InstantiateCSVError: Если файл поврежден (например, отсутствует колонка или данные).
+        """
+        try:
+            Item.all.clear()
+            with open(filename, newline='', encoding='windows-1251') as file:
+                reader = csv.DictReader(file, delimiter=",")
+
+                # Проверяем, что хотя бы одна строка данных присутствует в файле
+                row = next(reader, None)
+                if row is None:
+                    raise InstantiateCSVError("Файл item.csv поврежден. Отсутствуют данные.")
+
+                # Проверяем наличие необходимых колонок
+                if 'name' not in row or 'price' not in row or 'quantity' not in row:
+                    raise InstantiateCSVError("Файл item.csv поврежден. Недостаточно колонок данных.")
+
+                # Продолжаем считывание данных
+                for row in reader:
+                    name = row.get('name')
+                    price = row.get('price')
+                    quantity = row.get('quantity')
+
+                    cls(name, float(price), int(quantity))
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл item.csv")
 
     @staticmethod
     def string_to_number(s):

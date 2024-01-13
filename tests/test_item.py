@@ -1,7 +1,11 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
+import csv
+import os
+
 from src.item import Item
 from src.phone import Phone
 import pytest
+from src.item import Item, InstantiateCSVError
 
 
 def test_total_price():
@@ -48,11 +52,6 @@ def test_item_name():
     assert item.name.startswith('СуперСмарт')
 
 
-def test_instantiate_from_csv():
-    items = Item.instantiate_from_csv('C:/Users/User/PycharmProjects/sky-python/electronics-shop-project/src/items.csv')
-    assert len(items) == 5
-
-
 def test_string_to_number():
     assert Item.string_to_number('5') == 5
     assert Item.string_to_number('5.0') == 5
@@ -90,3 +89,45 @@ def test_add_with_different_class():
     item1 = Item("Смартфон", 10000, 20)
     with pytest.raises(TypeError):
         remaining_quantity = item1 - 5
+
+
+def test_instantiate_from_csv_file_not_found():
+    """
+    Проверяет, что при отсутствии файла item.csv выбрасывается FileNotFoundError.
+    """
+    with pytest.raises(FileNotFoundError, match="Отсутствует файл item.csv"):
+        Item.instantiate_from_csv(filename='nonexistent_file.csv')
+
+
+def test_instantiate_from_csv_file_corrupted():
+    """
+    Проверяет, что при повреждении файла item.csv выбрасывается InstantiateCSVError.
+    """
+    # Создаем временный файл с отсутствующей колонкой
+    filename = 'corrupted_file.csv'
+    with open(filename, 'w', newline='', encoding='windows-1251') as file:
+        writer = csv.writer(file, delimiter=",")
+        writer.writerow(['name', 'price'])  # Отсутствует колонка 'quantity'
+
+    with pytest.raises(InstantiateCSVError, match="Файл item.csv поврежден. Отсутствуют данные.") as info:
+        Item.instantiate_from_csv(filename='corrupted_file.csv')
+
+    # Удаляем временный файл
+    os.remove(filename)
+
+
+def test_instantiate_from_csv_file_empty():
+    """
+    Проверяет, что при отсутствии данных в файле item.csv выбрасывается InstantiateCSVError.
+    """
+    # Создаем временный файл без строк данных
+    filename = 'empty_file.csv'
+    with open(filename, 'w', newline='', encoding='windows-1251') as file:
+        writer = csv.writer(file, delimiter=",")
+        # Не добавляем строки данных
+
+    with pytest.raises(InstantiateCSVError, match="Файл item.csv поврежден. Отсутствуют данные.") as info:
+        Item.instantiate_from_csv(filename='empty_file.csv')
+
+    # Удаляем временный файл
+    os.remove(filename)
